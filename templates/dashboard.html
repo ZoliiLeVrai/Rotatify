@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phoxy.cloud · Espace client</title>
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    li a svg {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: rgb(0 0 0 / 60%);
+      width: 100%;
+      height: 100%;
+      z-index: 9000;
+      display: none;
+    }
+    @-webkit-keyframes rotating /* Safari and Chrome */ {
+      from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes rotating {
+      from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    .rotating {
+      -webkit-animation: rotating 2s linear infinite;
+      -moz-animation: rotating 2s linear infinite;
+      -ms-animation: rotating 2s linear infinite;
+      -o-animation: rotating 2s linear infinite;
+      animation: rotating 2s linear infinite;
+    }
+  </style>    
+<!-- Custom styles for this template -->
+<link href="/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    
+{% include 'partials/header.html' %}
+
+<div class="container-fluid">
+  <div class="row">
+
+    {% include 'partials/navbar.html' %}
+
+    <div class="loader">
+      <div class="position-absolute top-50 start-50 translate-middle" style="color:#FFF">
+        <svg class="rotating" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+          <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+        </svg>
+      </div>
+    </div>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Accueil</h1>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          Bienvenue {{ userInfo['username'] }}
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p>Vous trouverez sur cette page les informations sur vos proxy..</p>
+            <footer class="blockquote-footer">L'équipe <cite title="Source Title">Phoxy.cloud</cite></footer>
+          </blockquote>
+        </div>
+      </div>
+
+      {% if proxy_list|length > 0 %}
+      <h6 class="mt-3">Proxy en cours</h6>
+      <table class="table table-bordered border-primary mt-1" style="text-align: center;">
+        <thead style="background: #0d6efd; color: #FFF;">
+          <tr>
+            <th scope="col">IP:PORT</th>
+            <th scope="col">Username</th>
+            <th scope="col">Password</th>
+            <th scope="col">Quota</th>
+            <th scope="col">Début</th>
+            <th scope="col">Coût 
+              <span data-bs-toggle="tooltip" title="Coût total du proxy depuis sa création.">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16" style="padding-bottom: 3px;">
+                  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
+                </svg>
+              </span>
+            </th>
+            <th scope="col">⚙</th>
+          </tr>
+        </thead>
+        <tbody style="border-top:none">
+          {% for proxy in proxy_list %}
+            <tr>
+              <td>{{ proxy['external_ip'] }}:{{ proxy['port'] }}</td>
+              <td>{{ proxy['username'] }}</td>
+              <td>{{ proxy['password'] }}</td>
+              <td>{{'%0.2f'|format(proxy['current_quota_bytes']/1073741824|float)}}/<b>{{ '%0.2f'|format(proxy['max_quota_bytes']/1073741824) }} Go</b></td>
+              <td class="ts">{{ proxy['start_ts'] }}</td>
+              <td>{{ '%0.2f'|format(proxy['cost']) }}€</td>
+              <td><a href="#" style="text-decoration: none;" onclick="terminate(`{{ proxy['uuid'] }}`)">⚙</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-primary mt-3" role="alert">
+        Vous n'avez pas de proxy. Rendez-vous sur la <a href="/boutique/">boutique de proxy</a> pour passer commande.
+      </div>
+      {% endif %}
+
+      {% if proxy_list_ended|length > 0 %}
+      <h6>Proxy clôturé</h6>
+      <table class="table table-bordered border-primary mt-1" style="text-align: center;">
+        <thead style="background: #0d6efd; color: #FFF;">
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Password</th>
+            <th scope="col">Quota</th>
+            <th scope="col">Début</th>
+            <th scope="col">Fin</th>
+            <th scope="col">Coût</th>
+          </tr>
+        </thead>
+        <tbody style="border-top:none">
+          {% for proxy in proxy_list_ended %}
+            <tr>
+              <td>{{ proxy['username'] }}</td>
+              <td>{{ proxy['password'] }}</td>
+              <td>{{'%0.2f'|format(proxy['current_quota_bytes']/1073741824|float)}}/<b>{{ '%0.2f'|format(proxy['max_quota_bytes']/1073741824) }} Go</b></td>
+              <td class="ts">{{ proxy['start_ts'] }}</td>
+              <td class="ts">{{ proxy['end_ts'] }}</td>
+              <td>{{ '%0.2f'|format(proxy['cost']) }}€</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+      
+    </main>
+
+  </div>
+</div>
+
+  {% include 'partials/script.html' %}
+
+  <script type="text/javascript">
+
+
+    $( ".ts" ).each(function( index ) {
+      $(this).text(moment.unix($( this ).text()).format("DD/MM/YYYY HH:mm"));
+    });
+
+    function terminate(proxy_uuid) {
+      swal({
+        title: "Arrêter le proxy",
+        text: "Etes-vous sûr de vouloir résilier le proxy ?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        buttons: ["Non", "Oui, Arrêter le proxy"],
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          $('.loader').show();
+          $.post( "/api/terminate/", { proxy_uuid: proxy_uuid })
+            .done(function( data ) {
+              $('.loader').hide();
+              if(data.success == true) {
+                swal("Proxy clôturé.", {
+                  icon: "success",
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                swal(data.msg, {
+                  icon: "error",
+                }).then(() => {
+                  location.reload();
+                });
+              }
+              
+            });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

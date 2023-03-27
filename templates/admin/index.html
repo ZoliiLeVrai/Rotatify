@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" type="image/png" href="/img/ico.ico" />
+
+	<!-- Meta -->
+	<meta name="description" content="Proxy 4G rotatif français à prix compétitif. Rotation automatique, manuel ou pas API. Réservation de carte sim privé pour des IP 100% clean. Éviter les restrictions et le captcha à répétition.">
+	<meta name="author" content="Phoxy.cloud">
+
+	<title>Phoxy.cloud | Proxy 4G Français | IP Rotative</title>
+
+	<!-- vendor css -->
+	<link href="/libs/font-awesome/css/font-awesome.css" rel="stylesheet">
+	<link href="/libs/Ionicons/css/ionicons.css" rel="stylesheet">
+	<link href="/libs/jquery-toggles/css/toggles-full.css" rel="stylesheet">
+	<link href="/libs/jqvmap/css/jqvmap.min.css" rel="stylesheet">
+	<link href="/libs/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+
+	<!-- Slim CSS -->
+	<link rel="stylesheet" href="/css/slim.css">
+	<style type="text/css">
+		#all-session {
+			border: 1px solid #ced4da;
+			width: 100%;
+			text-align: center;
+			padding: 0.594rem 0.75rem;
+			font-size: 0.660rem;
+			line-height: 1.5;
+			color: #495057;
+			cursor: pointer;
+			font-family: monospace;
+		}
+	</style>
+</head>
+<body class="dashboard-4">
+
+	<div class="slim-header">
+		<div class="container">
+
+			<div class="slim-header-left">
+				<h2 class="slim-logo">
+					<a href="/">Phoxy<span>.</span>cloud</a>
+				</h2>
+			</div><!-- slim-header-left -->
+
+			<div class="slim-header-right">
+				<a href="/admin/logout/" class="btn btn-primary btn-icon" style="margin-left:5px">
+					<div style="height: 34px;"><i class="fas fa-sign-out-alt"></i></div>
+				</a>
+			</div>
+
+		</div><!-- container -->
+	</div><!-- slim-header -->
+
+	<div class="slim-mainpanel">
+		<div class="container pd-t-50" style="max-width: 1800px;">
+			<div class="row">
+				<div class="col-lg-12">
+					
+					<div class="section-wrapper mg-t-20">
+          <label class="section-title">Bordered Table</label>
+          <p class="mg-b-20 mg-sm-b-40">Add borders on all sides of the table and cells.</p>
+
+          <div class="table-responsive">
+            <table id="table1" class="table table-bordered mg-b-0" style="border:none">
+              <thead>
+                <tr>
+                	<th>Slot</th>
+                  <th>User/Pass</th>
+                  <th>Pass</th>
+                  <th>Ip:Port</th>
+                  <th>Date Début</th>
+                  <th>Date Fin</th>
+                  <th>Restant</th>
+                  <th>Quota</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for proxy in proxys_started %}
+                <tr>
+                	<th>{{ proxy['slot']}}</th>
+                  <th>{{ proxy['username']}}</th>
+                  <td>{{ proxy['password']}}</td>
+                  <td>{{ proxy['external_ip']}}:{{ proxy['port']}}</td>
+                  <td class="unix_to_date">{{ proxy['start_ts']}}</td>
+                  <td class="unix_to_date">{{ proxy['end_ts']}}</td>
+                  <td class="remaining"></td>
+                  <th>
+                  	<span class="bytes_to_size">{{ proxy['current_quota_bytes'] }}</span> /
+                  	<span class="bytes_to_size">{{ proxy['max_quota_bytes'] }}</span>
+                  </th>
+                  <th>
+                  	<a target="_blank" href="/admin_api/reboot_proxy/{{ proxy['uuid'] }}"><i class="fas fa-power-off"></i></a>
+                  	<a target="_blank" href="/admin_api/stop_proxy/{{ proxy['uuid'] }}"><i class="fas fa-ban"></i></a>
+                  </th>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div><!-- table-responsive -->
+        </div>
+
+				</div>
+		</div>
+	</div><!-- slim-mainpanel -->
+
+	<script src="/libs/jquery/js/jquery.js"></script>
+	<script src="/libs/popper.js/js/popper.js"></script>
+	<script src="/libs/bootstrap/js/bootstrap.js"></script>
+	<script src="/libs/jquery.cookie/js/jquery.cookie.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/fr.min.js" integrity="sha512-RAt2+PIRwJiyjWpzvvhKAG2LEdPpQhTgWfbEkFDCo8wC4rFYh5GQzJBVIFDswwaEDEYX16GEE/4fpeDNr7OIZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+	<script src="https://kit.fontawesome.com/c2227cbe8a.js" crossorigin="anonymous"></script>
+	<script>
+		$(function(){
+			'use strict'
+
+      // Fonction de convetion
+      function bytesToSize(bytes) {
+      	var sizes = ['Bytes', 'Ko', 'Mo', 'Go', 'To'];
+      	if (bytes == 0) return '0 Byte';
+      	var i = parseFloat(Math.floor(Math.log(bytes) / Math.log(1024)));
+       //return parseFloat(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+       return parseFloat(bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i]
+   		}
+
+   		$('#table1').DataTable();
+   		$('#table1_length').remove();
+   		$('#table1_filter').remove();
+   		$('#table1_info').remove();
+   		$('#table1_paginate').remove();
+
+			$( "tr" ).each(function( index ) {
+
+				let start_ts = 0
+				let end_ts = 0
+
+				$( this ).find(".unix_to_date").each(function( index ) {
+					let ts = parseInt($( this ).text())
+					let date = moment.unix(ts).format("DD/MM/YYYY HH:mm");
+					$( this ).text(date)
+					if(start_ts == 0) {
+						start_ts = ts
+					} else {
+						end_ts = ts
+					}
+				});
+
+				let duration = moment.duration( parseInt(end_ts * 1000) - parseInt({{ current_time }} * 1000), 'milliseconds');
+        $( this ).find(".remaining").html(duration.days()+"j "+duration.hours()+"h "+duration.minutes()+"m ")
+
+        $( this ).find(".bytes_to_size").each(function( index ) {
+					let bytes = parseInt($( this ).text())
+					$( this ).text(bytesToSize(bytes))
+				});
+
+
+			});
+
+    });
+</script>
+</body>
+</html>

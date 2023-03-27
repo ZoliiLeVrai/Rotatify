@@ -1,0 +1,88 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phoxy.cloud · Inscription</title>
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <!-- Custom styles for this template -->
+  <link href="/css/signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+    
+  <main class="form-signin">
+    <div>
+
+      <a href="/" style="color: black;text-decoration: none;">
+        <span class="fs-4" style="font-weight: 900;font-size: 36px!important;">Phoxy.cloud</span>
+      </a>
+
+      <h4 style="color: #0d6efd; text-transform: uppercase; font-size: 18px;">Créer un compte</h4>
+
+      <div class="form-floating" style="margin-top: 25px;">
+        <input type="email" class="form-control" id="username">
+        <label for="username">Nom d'utilisateur</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" class="form-control" id="password">
+        <label for="password">Mot de passe</label>
+      </div>
+
+      <img src="data:image/png;base64,{{ captcha }}" style="width: 100%; border: 1px solid #ced4da; border-bottom: 0;" id="img_captcha"/>
+
+      <div class="form-floating">
+        <input type="text" class="form-control" id="captcha" style="text-transform: uppercase;">
+        <label for="captcha">Code à recopier</label>
+      </div>
+      
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit" onclick="register()" style="margin-top: 10px;">Inscription</button>
+      <a href="/connexion/" style="text-decoration: none; padding-top: 5px; display: block; font-size: 13px;">Connexion</a>
+      {% include 'partials/footer.html' %}
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    function register() {
+      let username = $('#username').val();
+      let password = $('#password').val();
+      let captcha = $('#captcha').val();
+
+      if(username == "") { $("#username").notify("Entrez votre nom d'utilisateur", "error"); return; }
+      if(password == "") { $("#password").notify("Entrez un mot de passe", "error"); return; }
+      if(captcha == "") { $("#captcha").notify("Entrez le captcha", "error"); return; }
+      
+      $.post( "/auth/inscription/", { username: username, 
+                                      password: password,
+                                      captcha : captcha }).done(function( data ) {
+        if(data.success == false) {
+          $("button").notify(data.msg, "error");
+          $('#img_captcha').attr('src', 'data:image/png;base64,'+data.captcha)
+        } else {
+          window.location.replace("/accueil");
+        }
+      });
+
+    }
+  </script>
+</body>
+</html>

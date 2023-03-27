@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="/img/ico.ico" />
+    
+    <!-- Meta -->
+    <meta name="description" content="Proxy 4G rotatif français à prix compétitif. Rotation automatique, manuel ou pas API. Réservation de carte sim privé pour des IP 100% clean. Éviter les restrictions et le captcha à répétition.">
+    <meta name="author" content="Phoxy.cloud">
+
+    <title>Phoxy.cloud | Proxy 4G Français | IP Rotative</title>
+
+    <!-- vendor css -->
+    <link href="/libs/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/libs/Ionicons/css/ionicons.css" rel="stylesheet">
+    <link href="/libs/jqvmap/css/jqvmap.min.css" rel="stylesheet">
+    <link href="/libs/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+
+    <!-- Slim CSS -->
+    <link rel="stylesheet" href="/css/slim.css">
+    <style type="text/css">
+      #all-session {
+        border: 1px solid #ced4da;
+        width: 100%;
+        text-align: center;
+        padding: 0.594rem 0.75rem;
+        font-size: 0.660rem;
+        line-height: 1.5;
+        color: #495057;
+        cursor: pointer;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body class="dashboard-4">
+
+    <div class="signin-wrapper">
+      <div class="signin-box">
+        <h2 class="slim-logo" style="margin-bottom: 0px;"><a href="/">Phoxy<span>.cloud</span></a></h2>
+        <h2 class="signin-title-primary mg-b-30">Espace admin</h2>
+
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Identifiant" id="login">
+        </div><!-- form-group -->
+
+        <div class="form-group">
+          <input type="password" class="form-control" placeholder="Mot de passe" id="password">
+        </div><!-- form-group -->
+
+        <div class="form-group mg-b-20">
+          <img src="data:image/png;base64,{{ captcha }}" style="width: 100%; border: 1px solid #ced4da; border-bottom: 0;" id="img_captcha"/>
+          <input type="text" class="form-control" placeholder="Recopiez le code" onkeyup="this.value = this.value.toUpperCase();" id="captcha">
+        </div><!-- form-group -->
+
+        <button class="btn btn-primary btn-block btn-signin" style="margin-bottom: 0;" >Connexion</button>
+
+      </div>
+    </div>
+
+    <script src="/libs/jquery/js/jquery.js"></script>
+    <script src="/libs/popper.js/js/popper.js"></script>
+    <script src="/libs/bootstrap/js/bootstrap.js"></script>
+    <script src="/libs/jquery.cookie/js/jquery.cookie.js"></script>
+    <script src="/libs/jqvmap/js/jquery.vmap.min.js"></script>
+    <script src="/libs/jqvmap/js/jquery.vmap.world.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/fr.min.js" integrity="sha512-RAt2+PIRwJiyjWpzvvhKAG2LEdPpQhTgWfbEkFDCo8wC4rFYh5GQzJBVIFDswwaEDEYX16GEE/4fpeDNr7OIZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/js/slim.js"></script>
+    <script src="/js/jquery.vmap.sampledata.js"></script>
+    <script>
+      $(function(){
+        'use strict'
+
+        $(document).on('keypress',function(e) {
+          if(e.which == 13) {
+            login();
+          }
+        });
+
+        $( "button" ).click(function() {
+          login();
+        });
+
+        function login() {
+          let login = $('#login').val();
+          let password = $('#password').val();
+          let captcha = $('#captcha').val();
+          $.post( "/admin/auth", {'login': login, 'password': password, 'captcha': captcha })
+            .done(function( data ) {
+              if(data.success == false) {
+                $('button').notify(data.msg, "error");
+                $('#img_captcha').attr('src','data:image/png;base64,'+data.captcha)
+              } else {
+                window.location.replace("/admin/");
+              }
+            });
+        }
+      });
+    </script>
+  </body>
+</html>

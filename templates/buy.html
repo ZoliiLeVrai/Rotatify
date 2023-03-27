@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phoxy.cloud · Créditer mon compte</title>
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    li a svg {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+
+    .innumber {
+      color: #343a40;
+      font-weight: 700;
+    }
+
+    .form-label {
+      font-weight: 700;
+      color: #0d6efd;
+    }
+  </style>    
+<!-- Custom styles for this template -->
+<link href="/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    
+  {% include 'partials/header.html' %}
+
+  <div class="container-fluid">
+    <div class="row">
+
+      {% include 'partials/navbar.html' %}
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Créditer mon compte</h1>
+        </div>
+
+        <p>Créditer votre compte vous permet d'acheter des proxy via le site et par API.</p>
+        <p>Pour créditer votre compte, contactez-nous sur notre <a href="https://discord.gg/D4pkgrNCa6" target="_blank">serveur discord</a>.</p>
+        <div class="row">
+          <div class="col col-md-3">
+            <div class="card h-100">
+              <div class="card-header"><b>Mon solde</b></div>
+              <div class="card-body">
+                <p class="card-text" style="font-size: x-large;">{{ '%0.2f'|format(userInfo['balance']) }} €</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+    function buy() {
+      console.log('Go')
+      let price = $( "#price" ).val();
+      $.post( "/buy/process/", { price: price })
+        .done(function( data ) {
+          if(data.success == true) {
+            var win = window.open(data.url, '_blank');
+          } else {
+            $("#buybtn").notify(data.msg, "error");
+          }
+        });
+    }
+  </script>
+</body>
+</html>
